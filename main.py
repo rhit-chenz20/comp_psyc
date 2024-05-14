@@ -22,20 +22,26 @@ discrimination_range = {
     'tail_length': (0.2, 0.7),
 }
 
+lows = [0, 0.3, 0.2]
+highs = [1, 0.7, 0.7]
+
 animals = ['giraffe', 'horse', 'cat']
 param_names = ['neck_length', 'leg_length', 'tail_length']
 
 def generate_proposal(current_state):
     """ Generate a new proposal state based on current state """
     proposal = np.random.normal(current_state, 0.07*current_state)
+    
     for i in range(len(proposal)):
         p = proposal[i]
-        while(p< param_range[param_names[i]][0] or p> param_range[param_names[i]][1]):
-            proposal[i] = np.random.normal(current_state[i], 0.07*current_state[i])
+        if(p < param_range[param_names[i]][0]):
+            proposal[i] = param_range[param_names[i]][0]
+        elif (p > param_range[param_names[i]][1]):
+            proposal[i] = param_range[param_names[i]][1]
     return proposal
 
 def generate_discrimination_proposal():
-    re = np.array([0,0,0])
+    re = np.array([0.0,0.0,0.0])
     for i in range(len(re)):
         param_r = discrimination_range[param_names[i]]
         re[i] = np.random.uniform(param_r[0], param_r[1])
